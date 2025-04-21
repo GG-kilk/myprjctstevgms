@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эволюция игровой индустрии</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, 
+                #FFB6C1,  /* Нежно-розовый */
+                #87CEEB,  /* Светло-голубой */
+                #98FB98,  /* Мятный */
+                #DDA0DD   /* Пурпурный */
+            );
+            background-size: 400% 400%;
+            animation: gradient 20s ease infinite;
+            color: #2F4F4F;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem;
+        }
+
+        .section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-frame {
+            max-width: 1200px;
+            width: 95%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .text-content {
+            position: relative;
+            padding-right: 2rem;
+        }
+
+        h2 {
+            font-size: 2.8em;
+            margin-bottom: 1.5rem;
+            color: #6A5ACD;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .expandable {
+            max-height: 200px;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .expandable::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.9) 90%);
+            transition: opacity 0.3s ease;
+        }
+
+        .expandable.expanded {
+            max-height: 1500px;
+        }
+
+        .expandable.expanded::after {
+            opacity: 0;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: #556B2F;
+        }
+
+        .img-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .game-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .game-img:hover {
+            transform: scale(1.03);
+        }
+
+        .toggle-btn {
+            background: #6A5ACD;
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .toggle-btn:hover {
+            background: #7B68EE;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .timeline {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #6A5ACD;
+            transform: scale(1.6);
+            box-shadow: 0 0 20px rgba(106,90,205,0.3);
+        }
+
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .text-content {
+                padding-right: 0;
+                order: 1;
+            }
+            
+            .img-grid {
+                order: 2;
+            }
+            
+            .content-frame {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 1rem;
+            }
+            
+            h2 {
+                font-size: 2em;
+            }
+            
+            .game-img {
+                height: 220px;
+            }
+            
+            .toggle-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .timeline {
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline">
+        <div class="dot active" data-target="section1"></div>
+        <div class="dot" data-target="section2"></div>
+        <div class="dot" data-target="section3"></div>
+    </div>
+
+    <section class="section active" id="section1">
+        <div class="content-frame">
+            <div class="content-wrapper">
+                <div class="text-content">
+                    <h2>Истоки цифровых развлечений</h2>
+                    <div class="expandable">
+                        <p>Первые шаги в мире компьютерных игр начались в 1950-х годах с экспериментальных проектов. "Tennis for Two" (1958), созданная физиком Уильямом Хигинботамом, стала первым интерактивным электронным развлечением, использующим осциллограф для визуализации.</p>
+                        <p>1970-е годы ознаменовались появлением аркадных автоматов. Легендарная "Pong" от Atari (1972) установила новые стандарты, а Magnavox Odyssey (1972) стала первой домашней консолью, открыв эру домашних развлечений.</p>
+                        <p>1980-е подарили миру культовые игры: Pac-Man с его уникальным ИИ, Space Invaders с волнами атак и Tetris, показавший красоту простоты. Эти проекты заложили основы современных игровых механик.</p>
+                    </div>
+                    <button class="toggle-btn">Развернуть ▼</button>
+                </div>
+                <div class="img-grid">
+                    <img src="media/image1.jpg" class="game-img" alt="Аркадные автоматы 80-х">
+                    <img src="media/image2.jpg" class="game-img" alt="Ретро консоли">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="section2">
+        <div class="content-frame">
+            <div class="content-wrapper">
+                <div class="text-content">
+                    <h2>Технологический прорыв</h2>
+                    <div class="expandable">
+                        <p>1990-е стали эпохой 3D-революции. Игры вроде Doom (1993) и Quake (1996) переопределили жанр шутеров, внедрив псевдотрехмерную графику и сетевой мультиплеер.</p>
+                        <p>Консоли PlayStation (1994) и Nintendo 64 (1996) принесли настоящую 3D-графику в дома миллионов. Super Mario 64 задала новые стандарты платформеров, а The Legend of Zelda: Ocarina of Time показала потенциал нарратива в играх.</p>
+                        <p>Мобильная революция началась с Nokia Snake (1997), но настоящий бум произошел с появлением Angry Birds (2009), которая собрала более 2 миллиардов скачиваний.</p>
+                    </div>
+                    <button class="toggle-btn">Развернуть ▼</button>
+                </div>
+                <div class="img-grid">
+                    <img src="media/image3.jpg" class="game-img" alt="3D-графика 90-х">
+                    <img src="media/image4.jpg" class="game-img" alt="Игровые консоли">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="section3">
+        <div class="content-frame">
+            <div class="content-wrapper">
+                <div class="text-content">
+                    <h2>Современная эра игр</h2>
+                    <div class="expandable">
+                        <p>Современные технологии открыли новые горизонты: Unreal Engine 5 демонстрирует фотореалистичную графику, нейросети создают процедурный контент, а облачные сервисы вроде Xbox Cloud Gaming стирают аппаратные ограничения.</p>
+                        <p>Киберспорт превратился в индустрию с годовым оборотом $1.5 млрд. Турниры по Dota 2 и League of Legends собирают миллионы зрителей, а призовые фонды превышают $40 млн.</p>
+                        <p>VR-технологии (Oculus Rift, PlayStation VR2) и метавселенные переопределяют понятие погружения, а игры становятся социальными платформами с живыми концертами и событиями.</p>
+                    </div>
+                    <button class="toggle-btn">Развернуть ▼</button>
+                </div>
+                <div class="img-grid">
+                    <img src="media/image5.jpg" class="game-img" alt="VR-технологии">
+                    <img src="media/image6.jpg" class="game-img" alt="Киберспорт">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let currentSection = 0;
+        const sections = document.querySelectorAll('.section');
+        const dots = document.querySelectorAll('.dot');
+        let isScrolling = false;
+
+        // Переключение секций
+        function switchSection(direction) {
+            if(isScrolling) return;
+            isScrolling = true;
+            
+            const prevSection = sections[currentSection];
+            prevSection.classList.remove('active');
+            
+            if(direction === 'down' && currentSection < sections.length - 1) {
+                currentSection++;
+            } else if(direction === 'up' && currentSection > 0) {
+                currentSection--;
+            }
+            
+            const nextSection = sections[currentSection];
+            nextSection.classList.add('active');
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSection].classList.add('active');
+            
+            setTimeout(() => isScrolling = false, 1000);
+        }
+
+        // Раскрытие текста
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const expandable = btn.previousElementSibling;
+                expandable.classList.toggle('expanded');
+                btn.textContent = expandable.classList.contains('expanded') 
+                    ? 'Свернуть ▲' 
+                    : 'Развернуть ▼';
+            });
+        });
+
+        // Обработчики событий
+        window.addEventListener('wheel', e => {
+            e.preventDefault();
+            const direction = e.deltaY > 0 ? 'down' : 'up';
+            switchSection(direction);
+        });
+
+        let touchStartY = 0;
+        window.addEventListener('touchstart', e => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        window.addEventListener('touchend', e => {
+            const touchEndY = e.changedTouches[0].clientY;
+            const delta = touchStartY - touchEndY;
+            if(Math.abs(delta) > 50) switchSection(delta > 0 ? 'down' : 'up');
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                if(index === currentSection) return;
+                sections[currentSection].classList.remove('active');
+                currentSection = index;
+                sections[currentSection].classList.add('active');
+                dots.forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
